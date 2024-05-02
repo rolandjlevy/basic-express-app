@@ -1,1 +1,1 @@
-# basic-express-app
+# Basic MongoDb / Express.js app
