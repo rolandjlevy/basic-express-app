@@ -9,7 +9,9 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.get("/", (req, res) => res.send("Home"));
+app.get("/", (req, res) =>
+  res.send(`<h1>Home</h1><p><a href='/users'>View users</a></p>`)
+);
 
 const formatUsersContent = (data) =>
   data.reduce((acc, item) => {
