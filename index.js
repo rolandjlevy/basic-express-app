@@ -18,9 +18,9 @@ const formatUsersContent = (data) =>
     const { _id, date, username, email } = item;
     acc += `
     <ul>
-      <li>id: <a href='/user/${_id}'>${_id}</a></li>
+      <li>id: <a href='/user/id/${_id}'>${_id}</a></li>
+      <li>username: <a href='/user/search/${username}'>${username}</a></li>
       <li>date: ${date}</li>
-      <li>username: ${username}</li>
       <li>email: ${email}</li>
     </ul>`;
     return acc;
@@ -41,9 +41,25 @@ app.get("/users", (req, res, next) => {
     });
 });
 
-app.get("/user/:id", (req, res, next) => {
+app.get("/user/id/:id", (req, res, next) => {
   User.findOne({ _id: req.params.id })
     .then((data) => {
+      res.status(200).json(data);
+    })
+    .catch((err) => {
+      return next(err);
+    });
+});
+
+app.get("/user/search/:searchTerm", (req, res, next) => {
+  const { searchTerm } = req.params;
+  User.find({
+    username: { $regex: new RegExp(searchTerm, "i") },
+  })
+    .then((data) => {
+      if (data.length === 0) {
+        return res.status(404).json({ message: "Users not found" });
+      }
       res.status(200).json(data);
     })
     .catch((err) => {
